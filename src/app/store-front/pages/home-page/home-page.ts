@@ -3,22 +3,33 @@ import { ProductsService } from '@/products/services/products.service';
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { rxResource } from '@angular/core/rxjs-interop'
 import { ProductCardSkeleton } from "@/products/components/product-card/product-card-skeleton/product-card-skeleton";
+import { Pagination } from "@/shared/components/pagination/pagination";
+import { PaginationService } from '../../../shared/components/pagination/pagination.service';
 
 @Component({
   selector: 'app-home-page',
-  imports: [ProductCard, ProductCardSkeleton],
+  imports: [ProductCard, ProductCardSkeleton, Pagination],
   templateUrl: './home-page.html',
   changeDetection: ChangeDetectionStrategy.Eager,
 })
 export class HomePage {
   productsService = inject(ProductsService);
+  paginationService = inject(PaginationService);
+
+  // activatedRoute = inject(ActivatedRoute);
+  // currentPage = toSignal(this.activatedRoute.queryParamMap.pipe(
+  //   map(params => (params.get('page') ? +params.get('page')! : 1)),
+  //   map(page => ((isNaN(page) || page === 0) ? 1 : page))
+  // ), {
+  //   initialValue: 1
+  // });
 
   productsResource = rxResource(
     {
-      params: () => ({}),
+      params: () => ({ page: this.paginationService.currentPage() - 1 }),
       stream: ({ params }) => {
         return this.productsService.getProducts({
-          
+          offset: params.page * 9
         })
       }
     }
