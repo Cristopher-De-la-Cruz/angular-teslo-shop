@@ -1,13 +1,21 @@
-import { AfterViewInit, ChangeDetectionStrategy, Component, ElementRef, input, viewChild } from '@angular/core';
+import {
+  AfterViewInit,
+  ChangeDetectionStrategy,
+  Component,
+  effect,
+  ElementRef,
+  input,
+  viewChild,
+} from '@angular/core';
+
 import Swiper from 'swiper';
 import { Navigation, Pagination } from 'swiper/modules';
-// import Swiper and modules styles
+
 import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
+
 import { ProductImagePipe } from '@/products/pipes/product-image.pipe';
-
-
 
 @Component({
   selector: 'product-carousel',
@@ -22,40 +30,56 @@ import { ProductImagePipe } from '@/products/pipes/product-image.pipe';
   `
 })
 export class ProductCarousel implements AfterViewInit {
+
   images = input.required<string[]>();
+
   swiperDiv = viewChild.required<ElementRef>('swiperDiv');
 
+  swiper?: Swiper;
+
+  constructor() {
+    effect(() => {
+      this.images(); // señal que si cambia se dispara el efecto
+      if (!this.swiperDiv) return;
+      // Esperamos a que Angular actualice el DOM
+      queueMicrotask(() => {
+        this.swiper?.destroy(true, true);
+        const paginationEl: HTMLDivElement = this.swiperDiv().nativeElement?.querySelector('.swiper-pagination');
+        paginationEl.innerHTML = '';
+
+        this.swiperInit();
+      });
+    });
+  }
 
   ngAfterViewInit(): void {
+    this.swiperInit();
+  }
+
+  swiperInit(): void {
     const element = this.swiperDiv().nativeElement;
-    if (!element) return;
-    const swiper = new Swiper(element, {
-      // Optional parameters
+
+    this.swiper = new Swiper(element, {
       direction: 'horizontal',
       loop: true,
+
       modules: [
         Navigation,
         Pagination
       ],
 
-      // If we need pagination
       pagination: {
         el: '.swiper-pagination',
       },
 
-      // Navigation arrows
       navigation: {
         nextEl: '.swiper-button-next',
         prevEl: '.swiper-button-prev',
       },
 
-      // And if we need scrollbar
       scrollbar: {
         el: '.swiper-scrollbar',
       },
     });
-
-
   }
-
 }

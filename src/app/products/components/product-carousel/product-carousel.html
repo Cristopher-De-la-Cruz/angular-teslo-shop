@@ -7,6 +7,10 @@
        <div class="swiper-slide">
         <img class="w-full object-cover animate-fade-in" [src]="image | productImage " alt="Producto">
        </div>
+      } @empty {
+       <div class="swiper-slide">
+        <img class="w-full object-cover animate-fade-in" [src]="null | productImage " alt="Producto">
+       </div>
      }
     ...
   </div>

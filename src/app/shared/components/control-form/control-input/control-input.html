@@ -1,0 +1,10 @@
+<input
+      type="text"
+      [placeholder]="placeholder()"
+      class="input input-bordered w-full"
+      formControlName="title"
+      /* [formControlName]="controlName()" */
+      [class.border-red-500]="controlForm().get(controlName())?.errors ?? false"
+    />
+
+    <form-error-label [control]="controlForm().get(controlName())!" />

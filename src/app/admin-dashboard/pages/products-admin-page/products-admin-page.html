@@ -1,0 +1,21 @@
+<h1 class="text-2xl font-bold">Listado de productos</h1>
+<h3 class="text-lg">Total de productos
+  <span class="text-accent">{{ productsResource.value()?.count ?? 0 }}</span>
+</h3>
+
+<div class="divider"></div>
+<!-- Controls -->
+<div class="flex items-center gap-2 h-20 w-full justify-between">
+  <app-pagination [currentPage]="paginationService.currentPage()" [pages]="productsResource.value()?.pages ?? 0" />
+
+  <select #perPage class="select select-bordered w-32" (change)="productsPerPage.set( +perPage .value)">
+    @for (i of [10, 20, 50, 100]; track i) {
+    <option [value]="i">{{ i }}</option>
+    }
+  </select>
+  <div class="flex flex-1">
+    <button class="btn btn-primary" routerLink="/admin/products/new">Nuevo</button>
+  </div>
+</div>
+<!-- Listado -->
+<product-table [products]="productsResource.value()?.products ?? []" [loading]="productsResource.isLoading()" />

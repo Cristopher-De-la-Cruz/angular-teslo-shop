@@ -29,6 +29,12 @@
     <button class="btn btn-ghost">
       {{ authService.user()?.fullName ?? '' }}
     </button>
+    @if (authService.isAdmin()) {
+      <a routerLink="/admin/products" class="btn btn-sm btn-primary">
+        Admin
+      </a>
+
+    }
     <button class="btn btn-sm btn-error" (click)="authService.logout()">
       Logout
     </button>
