@@ -29,7 +29,7 @@ export class HomePage {
       params: () => ({ page: this.paginationService.currentPage() - 1 }),
       stream: ({ params }) => {
         return this.productsService.getProducts({
-          offset: params.page * 9
+          offset: params.page * this.productsService.getLimitProductsPerPage()
         })
       }
     }

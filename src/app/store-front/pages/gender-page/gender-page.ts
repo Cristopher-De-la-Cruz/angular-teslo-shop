@@ -27,7 +27,7 @@ export class GenderPage {
       stream: ({ params }) => {
         return this.productsService.getProducts({
           gender: params.gender,
-          offset: params.page * 9,
+          offset: params.page * this.productsService.getLimitProductsPerPage(),
         });
       }
     }

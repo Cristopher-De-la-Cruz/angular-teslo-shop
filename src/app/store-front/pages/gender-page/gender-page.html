@@ -20,5 +20,6 @@
 </section>
 
 
-
-<app-pagination [pages]="productsResource.value()?.pages ?? 0" [currentPage]="paginationService.currentPage()" />
+<section class="pb-5 w-full flex justify-center">
+  <app-pagination [pages]="productsResource.value()?.pages ?? 0" />
+</section>

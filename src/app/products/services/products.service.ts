@@ -33,10 +33,15 @@ export class ProductsService {
   private http = inject(HttpClient);
   private productsCache = new Map<string, ProductsResponse>();
   private productCache = new Map<string, Product>();
+  private limitProductsPerPage = 9;
+
+  getLimitProductsPerPage() {
+    return this.limitProductsPerPage;
+  }
 
 
   getProducts(options: Options): Observable<ProductsResponse> {
-    const { limit = 9, offset = 0, gender = '' } = options;
+    const { limit = this.limitProductsPerPage, offset = 0, gender = '' } = options;
     const key = `${limit}-${offset}-${gender}`;
     if (this.productsCache.has(key)) return of(this.productsCache.get(key)!);
 
