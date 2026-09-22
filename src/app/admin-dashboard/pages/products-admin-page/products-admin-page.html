@@ -6,7 +6,7 @@
 <div class="divider"></div>
 <!-- Controls -->
 <div class="flex items-center gap-2 h-20 w-full justify-between">
-  <app-pagination [currentPage]="paginationService.currentPage()" [pages]="productsResource.value()?.pages ?? 0" />
+  <app-pagination [pages]="productsResource.value()?.pages ?? 0" />
 
   <select #perPage class="select select-bordered w-32" (change)="productsPerPage.set( +perPage .value)">
     @for (i of [10, 20, 50, 100]; track i) {

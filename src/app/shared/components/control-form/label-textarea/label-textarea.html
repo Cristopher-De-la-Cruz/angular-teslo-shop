@@ -1,0 +1,14 @@
+<label class="floating-label w-full">
+  <textarea [placeholder]="label()"
+    class="textarea textarea-md w-full"
+    [rows]="rows()"
+    [formControl]="control()"
+    ></textarea>
+  <span>{{ label() }}</span>
+</label>
+
+@if (formUtils.isValidField(form(), controlName())) {
+  <span class="text-xs text-red-500">
+      {{ formUtils.getFieldError(form(), controlName()) }}
+  </span>
+}

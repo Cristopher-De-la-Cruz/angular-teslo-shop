@@ -19,6 +19,7 @@ export class FormUtils {
   static emailPattern = '^[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,4}$';
   static notOnlySpacesPattern = '^[a-zA-Z0-9]+$';
   static slugPattern = '^[a-z0-9_]+(?:-[a-z0-9_]+)*$';
+  static passwordPattern = '^(?=.*[A-Z])(?=.*[a-z])(?=.*\\d).+$';
 
   static getTextError(errors: ValidationErrors) {
     for (const key of Object.keys(errors)) {
@@ -28,6 +29,9 @@ export class FormUtils {
 
         case 'minlength':
           return `Mínimo de ${errors['minlength'].requiredLength} caracteres.`;
+
+        case 'maxlength':
+          return `Máximo de ${errors['maxlength'].requiredLength} caracteres.`;
 
         case 'min':
           return `Valor mínimo de ${errors['min'].min}`;
@@ -41,9 +45,17 @@ export class FormUtils {
         case 'noStrider':
           return `No se puede usar el username de strider en la app`;
 
+        case 'slugTaken':
+          return 'Este slug ya está ocupado';
+
         case 'pattern':
+          console.log("error pattern", errors['pattern'].requiredPattern, FormUtils.passwordPattern, (errors['pattern'].requiredPattern === FormUtils.passwordPattern));
           if (errors['pattern'].requiredPattern === FormUtils.emailPattern) {
             return 'El valor ingresado no luce como un correo electrónico';
+          }
+
+          if (errors['pattern'].requiredPattern === FormUtils.passwordPattern) {
+            return 'Debe tener una mayúscula, minuscula y un número';
           }
 
           return 'Error de patrón contra expresión regular';

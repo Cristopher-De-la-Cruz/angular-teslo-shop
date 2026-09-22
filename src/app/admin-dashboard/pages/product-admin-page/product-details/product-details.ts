@@ -1,16 +1,18 @@
 import { Product } from '@/products/interfaces/product.interface';
 import { ChangeDetectionStrategy, Component, computed, inject, input, OnInit, signal } from '@angular/core';
 import { ProductCarousel } from "@/products/components/product-carousel/product-carousel";
-import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { AbstractControl, AsyncValidatorFn, FormBuilder, ReactiveFormsModule, ValidationErrors, Validators } from '@angular/forms';
 import { FormUtils } from '@/utils/form-utils';
-import { FormErrorLabel } from "@/shared/components/pagination/form-error-label/form-error-label";
 import { ProductsService } from '../../../../products/services/products.service';
 import { Router } from '@angular/router';
-import { firstValueFrom, Observable, of } from 'rxjs';
+import { catchError, firstValueFrom, map, Observable, of } from 'rxjs';
+import { LabelInput } from "@/shared/components/control-form/label-input/label-input";
+import { LabelTextarea } from "@/shared/components/control-form/label-textarea/label-textarea";
+import { Alert } from "@/shared/components/alert/alert";
 
 @Component({
   selector: 'product-details',
-  imports: [ProductCarousel, ReactiveFormsModule, FormErrorLabel],
+  imports: [ProductCarousel, ReactiveFormsModule, LabelInput, LabelTextarea, Alert],
   templateUrl: './product-details.html',
   changeDetection: ChangeDetectionStrategy.Eager,
 })
@@ -21,18 +23,38 @@ export class ProductDetails implements OnInit {
   private fb = inject(FormBuilder);
   productsService = inject(ProductsService);
 
+  hasErrors = signal(false);
   wasSaved = signal(false);
   imageFileList: FileList | undefined = undefined;
   tempImages = signal<string[]>([]);
 
   carrouselImages = computed(() => [... this.product().images ?? [], ... this.tempImages() ?? []]);
 
+
+  verifyIdSlug: AsyncValidatorFn = (control: AbstractControl): Observable<ValidationErrors | null> => {
+
+    const formSlug = control.value;
+    const productSlug = this.product()?.slug;
+
+    // Si estamos editando y el slug no cambió
+    if (formSlug === productSlug) {
+      return of(null);
+    }
+
+    return this.productsService.getProductByIdSlug(formSlug).pipe(
+      map(() => ({
+        slugTaken: true
+      })),
+      catchError(() => of(null))
+    );
+  };
+
   productForm = this.fb.group({
     title: ['', [Validators.required]],
     description: ['', [Validators.required]],
-    slug: ['', [Validators.required, Validators.pattern(FormUtils.slugPattern)]],
-    price: [0, [Validators.required, Validators.min(0)]],
-    stock: [0, [Validators.required, Validators.min(0)]],
+    slug: ['', [Validators.required, Validators.pattern(FormUtils.slugPattern)], [this.verifyIdSlug]],
+    price: [0, [Validators.required, Validators.min(1)]],
+    stock: [0, [Validators.required, Validators.min(1)]],
     sizes: [['']],
     images: [[]],
     tags: [''],
@@ -40,7 +62,9 @@ export class ProductDetails implements OnInit {
 
   });
 
-  sizes = ['XS', 'S', 'M', 'L', 'XL', 'XXL'];
+  sizes: string[] = ['XS', 'S', 'M', 'L', 'XL', 'XXL'];
+  genders: string[] = ['Men', 'Women', 'Kid', 'Unisex'];
+
 
   ngOnInit(): void {
     this.setFormValue(this.product());
@@ -66,21 +90,28 @@ export class ProductDetails implements OnInit {
       tags: formValue.tags?.toLowerCase().split(',').map(tag => tag.trim()) ?? []
     }
 
-    if (this.product().id === 'new') {
-      // Crear
-      const product = await firstValueFrom(
-        this.productsService.createProduct(productLike, this.imageFileList)
-      );
-      this.router.navigate(['/admin/products', product.id]);
+    let withErrors = false;
+    try {
+      if (this.product().id === 'new') {
+        // Crear
+        const product = await firstValueFrom(
+          this.productsService.createProduct(productLike, this.imageFileList)
+        );
+        this.router.navigate(['/admin/products', product.id]);
+      } else {
+        await firstValueFrom(this.productsService.updateProduct(this.product().id, productLike, this.imageFileList));
+      }
 
-    } else {
-      await firstValueFrom(this.productsService.updateProduct(this.product().id, productLike, this.imageFileList));
+      this.wasSaved.set(true);
+      setTimeout(() => {
+        this.wasSaved.set(false);
+      }, 3000);
+    } catch (err) {
+      this.hasErrors.set(true);
+      setTimeout(() => {
+        this.hasErrors.set(false);
+      }, 3000);
     }
-
-    this.wasSaved.set(true);
-    setTimeout(() => {
-      this.wasSaved.set(false);
-    }, 3000);
 
   }
 
