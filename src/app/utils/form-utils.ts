@@ -49,7 +49,7 @@ export class FormUtils {
           return 'Este slug ya está ocupado';
 
         case 'pattern':
-          console.log("error pattern", errors['pattern'].requiredPattern, FormUtils.passwordPattern, (errors['pattern'].requiredPattern === FormUtils.passwordPattern));
+          // console.log("error pattern", errors['pattern'].requiredPattern, FormUtils.passwordPattern, (errors['pattern'].requiredPattern === FormUtils.passwordPattern));
           if (errors['pattern'].requiredPattern === FormUtils.emailPattern) {
             return 'El valor ingresado no luce como un correo electrónico';
           }
@@ -111,7 +111,6 @@ export class FormUtils {
   static async checkingServerResponse(
     control: AbstractControl
   ): Promise<ValidationErrors | null> {
-    console.log('Validando contra servidor');
 
     await sleep(); // 2 segundos y medio
 

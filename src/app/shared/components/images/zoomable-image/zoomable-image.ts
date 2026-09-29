@@ -12,7 +12,6 @@ export class ZoomableImage {
   isZoomed = signal(false);
 
   toggleZoom(): void {
-    console.log('toggleZoom');
     this.isZoomed.update(value => !value);
   }
 

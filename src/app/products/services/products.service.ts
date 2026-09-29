@@ -115,7 +115,7 @@ export class ProductsService {
     if (!images) return of([]);
     const uploadObservables = Array.from(images).map(imageFile => this.uploadImage(imageFile));
     return forkJoin(uploadObservables).pipe(
-      tap(imageNames => console.log({ imageNames })),
+      // tap(imageNames => console.log({ imageNames })),
     );
   }
 

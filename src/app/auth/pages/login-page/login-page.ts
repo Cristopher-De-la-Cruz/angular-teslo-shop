@@ -34,7 +34,6 @@ export class LoginPage {
   });
 
   onSubmit() {
-    console.log(this.loginForm.controls.password.errors)
     if (this.loginForm.invalid) {
       this.loginForm.markAllAsTouched();
       return;

@@ -58,7 +58,6 @@ export class AuthService {
 
   checkStatus(): Observable<boolean> {
     const token = localStorage.getItem('token');
-    console.log({token})
     if (!token) {
       this.logout();
       return of(false);

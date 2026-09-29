@@ -101,7 +101,6 @@ export class ProductDetails implements OnInit {
         );
         this.router.navigate(['/admin/products', product.id]);
       } else {
-        console.log(this.imageFileList);
         await firstValueFrom(this.productsService.updateProduct(this.product().id, productLike, this.imageFileList));
       }
 
@@ -131,7 +130,6 @@ export class ProductDetails implements OnInit {
   }
 
   onFilesChanged(change: adjuntadorChanged) {
-    console.log({change});
     this.imageFileList = change.imageFileList;
     this.tempImages.set(change.tempImages);
   }
