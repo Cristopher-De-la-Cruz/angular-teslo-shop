@@ -1,14 +1,19 @@
-<h1 class="text-2xl font-bold">{{ product().title }}</h1>
+<h1 class="text-2xl font-bold truncate pr-5">{{ product().title }}</h1>
 <div class="divider"></div>
 
-<form [formGroup]="productForm" (ngSubmit)="onSubmit()" class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+<form [formGroup]="productForm" (ngSubmit)="onSubmit()" class="grid grid-cols-1 lg:grid-cols-2 gap-4">
   <!-- Datos generales -->
   <div class="flex flex-col gap-2">
-    <h2 class="text-2xl font-bold h-12">Datos generales</h2>
+    <div class="w-full flex justify-between">
+      <h2 class="text-2xl font-bold h-12 truncate">Datos generales</h2>
+      <button class="btn btn-secondary block lg:hidden" type="submit">
+        Guardar
+      </button>
+    </div>
     <app-label-input label="Título" [form]="productForm" [control]="productForm.controls.title" />
     <app-label-input label="Slug" [form]="productForm" [control]="productForm.controls.slug" />
 
-    <div class="w-4/6">
+    <div class="w-full lg:w-4/6">
       <app-label-textarea label="Descripción" [form]="productForm" [control]="productForm.controls.description" [rows]="6" />
     </div>
 
@@ -46,7 +51,7 @@
 
   <!-- Imágenes -->
   <div class="flex flex-col gap-2">
-    <div class="flex justify-end h-12">
+    <div class="hidden lg:flex justify-end h-12">
       <button class="btn btn-secondary" type="submit">
         <!-- <span class="loading loading-spinner loading-sm"></span> -->
         Guardar
@@ -55,7 +60,9 @@
 
     <product-carousel [images]="carrouselImages()" />
 
-    <input
+    <app-adjuntador (filesChanged)="onFilesChanged($event)" />
+
+    <!-- <input
       type="file"
       multiple
       accept="image/*"
@@ -68,7 +75,7 @@
           <img [src]="image" alt="Temporal image" class="w-full object-cover rounded-xl">
         }
 
-      </div>
+      </div> -->
   </div>
 </form>
 @if (wasSaved()) {

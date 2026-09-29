@@ -1,0 +1,25 @@
+<!-- ACTIVADOR -->
+<div class="contents" (click)="openModal()">
+  <ng-content select="[modal-trigger]"></ng-content>
+</div>
+
+@if (open()) {
+  <div
+    class="fixed inset-0 z-30 flex items-center justify-center animate-fade-in h-screen w-full"
+    [class.animate-fade-out]="closing()"
+    (click)="handleOverlayClick($event)"
+  >
+
+    <!-- FONDO -->
+    <div class="absolute inset-0 bg-black/50"></div>
+
+    <!-- CONTENEDOR DEL CONTENIDO -->
+    <div
+      class="relative z-10 w-full h-full animate-zoom-in flex justify-center items-center"
+      [class.animate-zoom-out]="closing()"
+    >
+      <ng-content select="[modal-content]"></ng-content>
+    </div>
+
+  </div>
+}

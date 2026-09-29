@@ -4,18 +4,54 @@
 @theme {
   --font-montserrat: "Montserrat", sans-serif;
   --animate-fade-in: fadeIn 0.3s ease-in-out;
+  --animate-fade-out: fadeOut 0.3s ease-in-out;
+  --animate-zoom-in: zoomIn 0.3s ease-in-out;
+  --animate-zoom-out: zoomOut 0.3s ease-in-out;
 }
 
 
 @keyframes fadeIn {
-  0% {
-    opacity: 0
+  from {
+    opacity: 0;
   }
 
-  100% {
-    opacity: 1
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes fadeOut {
+  from {
+    opacity: 1;
   }
 
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes zoomIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes zoomOut {
+  from {
+    opacity: 1;
+    transform: scale(1);
+  }
+
+  to {
+    opacity: 0;
+    transform: scale(0.95);
+  }
 }
 
 @plugin "daisyui" {

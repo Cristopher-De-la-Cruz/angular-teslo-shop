@@ -109,11 +109,6 @@ export class ProductsService {
       );
     });
   }
-  // getProductsByTerm(term: string): Observable<ProductsResponse> {
-
-  // }
-
-
 
   // Tome Fileslist y lo suba
   uploadImages(images?: FileList): Observable<string[]> {

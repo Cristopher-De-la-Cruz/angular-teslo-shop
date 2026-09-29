@@ -5,17 +5,21 @@
 
 <div class="divider"></div>
 <!-- Controls -->
-<div class="flex items-center gap-2 h-20 w-full justify-between">
+<div class="flex items-center gap-2 h-20 w-full justify-between flex-col md:flex-row mb-10 md:mb-0">
   <app-pagination [pages]="productsResource.value()?.pages ?? 0" />
 
-  <select #perPage class="select select-bordered w-32" (change)="productsPerPage.set( +perPage .value)">
-    @for (i of [10, 20, 50, 100]; track i) {
-    <option [value]="i">{{ i }}</option>
-    }
-  </select>
-  <div class="flex flex-1">
-    <button class="btn btn-primary" routerLink="/admin/products/new">Nuevo</button>
+  <div class="flex gap-2 flex-1">
+    <select #perPage class="select select-bordered w-32" (change)="productsPerPage.set( +perPage .value)">
+      @for (i of [10, 20, 50, 100]; track i) {
+      <option [value]="i">{{ i }}</option>
+      }
+    </select>
+    <div class="flex flex-1">
+      <button class="btn btn-primary" routerLink="/admin/products/new">Nuevo</button>
+    </div>
   </div>
 </div>
 <!-- Listado -->
-<product-table [products]="productsResource.value()?.products ?? []" [loading]="productsResource.isLoading()" />
+<div>
+  <product-table [products]="productsResource.value()?.products ?? []" [loading]="productsResource.isLoading()" />
+</div>

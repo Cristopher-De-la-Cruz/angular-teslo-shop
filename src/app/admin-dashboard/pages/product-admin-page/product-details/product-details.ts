@@ -9,10 +9,12 @@ import { catchError, firstValueFrom, map, Observable, of } from 'rxjs';
 import { LabelInput } from "@/shared/components/control-form/label-input/label-input";
 import { LabelTextarea } from "@/shared/components/control-form/label-textarea/label-textarea";
 import { Alert } from "@/shared/components/alert/alert";
+import { Adjuntador } from "@/shared/components/control-form/adjuntador/adjuntador";
+import { adjuntadorChanged } from '@/shared/components/control-form/interfaces/adjuntador.interface';
 
 @Component({
   selector: 'product-details',
-  imports: [ProductCarousel, ReactiveFormsModule, LabelInput, LabelTextarea, Alert],
+  imports: [ProductCarousel, ReactiveFormsModule, LabelInput, LabelTextarea, Alert, Adjuntador],
   templateUrl: './product-details.html',
   changeDetection: ChangeDetectionStrategy.Eager,
 })
@@ -99,6 +101,7 @@ export class ProductDetails implements OnInit {
         );
         this.router.navigate(['/admin/products', product.id]);
       } else {
+        console.log(this.imageFileList);
         await firstValueFrom(this.productsService.updateProduct(this.product().id, productLike, this.imageFileList));
       }
 
@@ -127,14 +130,9 @@ export class ProductDetails implements OnInit {
     this.productForm.patchValue({ sizes: currentSizes });
   }
 
-  onFilesChanged(event: Event) {
-    // Obtiene lista de archivos
-    const fileList = (event.target as HTMLInputElement).files;
-    this.imageFileList = fileList ?? undefined;
-    // genera urls temporales
-    const imageUrls = Array.from(fileList ?? []).map(
-      file => URL.createObjectURL(file)
-    );
-    this.tempImages.set(imageUrls);
+  onFilesChanged(change: adjuntadorChanged) {
+    console.log({change});
+    this.imageFileList = change.imageFileList;
+    this.tempImages.set(change.tempImages);
   }
 }
